@@ -1,0 +1,23 @@
+name: publish to GHCR
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build
+        run: docker build . --tag ghcr.io/klaegera-scs/jenkins-agent-docker-cli:latest
+
+      - name: push
+        run: docker push ghcr.io/klaegera-scs/jenkins-agent-docker-cli:latest
